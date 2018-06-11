@@ -1,0 +1,21 @@
+language: go
+
+go: 1.10.x
+
+jobs:
+  include:
+    - &test-stage
+      stage: test
+      env: SERVICE="services/service1" APP_ENV=test TEST_SUITE=php_functional_1
+      script:
+          - ./ci/test.sh
+
+    - <<: *test-stage
+      env: SERVICE="services/service2" APP_ENV=test TEST_SUITE=php_functional_2
+
+    - <<: *test-stage
+      env: SERVICE=service2
+
+    - <<: *test-stage
+      env: SERVICE="services/service3" SOME_OTHER_VAR="whatever"
+
