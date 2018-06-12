@@ -6,7 +6,8 @@ install: skip
 
 env:
   global:
-      - CHANGED_DIRS=$(ci/services.sh)
+      # - CHANGED_DIRS=$(ci/services.sh)
+      - CHANGED_DIRS=@ci/services.sh@@services/service3@@services/service4@
 
 jobs:
   include:
