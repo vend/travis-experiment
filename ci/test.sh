@@ -7,6 +7,8 @@ echo $CHANGED_DIRS
 # echo "1"
 # git diff --name-only master...
 
+git fetch --all
+
 git branch -a
 
 echo "2"
