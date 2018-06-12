@@ -7,7 +7,7 @@ install:
 
 env:
   global:
-      - CHANGED_DIRS=$(ci/services.sh)
+      - CHANGED_DIRS=$(./ci/services.sh)
 
 jobs:
   include:
