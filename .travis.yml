@@ -4,10 +4,12 @@ go: 1.10.x
 
 install:
   - git fetch origin master
+  - echo "---$(./ci/services.sh)---"
 
 env:
   global:
-      - CHANGED_DIRS=$(./ci/services.sh)
+      # - CHANGED_DIRS=$(./ci/services.sh)
+      - CHANGED_DIRS=@ci/services.sh@@services/service3@@services/service4@
 
 jobs:
   include:
