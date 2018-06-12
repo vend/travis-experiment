@@ -15,12 +15,12 @@ jobs:
     - &test-stage
       stage: test
       env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_1 IGNORE=$(./ci/ignore.sh)
-#      if: env(SOME_VAR) = "whatever"
+      if: env(SOME_VAR) = whatever
       script:
           - ./ci/test.sh
 
     - <<: *test-stage
-      # if: env(IGNORE) = 0
+      if: env(SOME_VAR) = whatever2
       env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_2 IGNORE=$(./ci/ignore.sh)
 
     - <<: *test-stage
