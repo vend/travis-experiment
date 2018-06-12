@@ -8,6 +8,7 @@ env:
   global:
       - CHANGED_DIRS="service1 service2"
       - SOME_VAR="whatever"
+      - IGNORE_GLOBAL=$(./ci/ignore.sh)
 
 jobs:
   include:
