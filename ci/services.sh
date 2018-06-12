@@ -2,10 +2,10 @@
 
 set -e
 
-CHANGED_DIRS=$(git diff --name-only FETCH_HEAD... | awk -F '/' '/.*\// {print $1 "/" $2 }' | sort | uniq)
+CHANGED_DIRS111=$(git diff --name-only FETCH_HEAD... | awk -F '/' '/.*\// {print $1 "/" $2 }' | sort | uniq)
 
 JOINED=""
-for CHANGED_DIR in $CHANGED_DIRS
+for CHANGED_DIR in $CHANGED_DIRS111
 do
     JOINED="$JOINED@$CHANGED_DIR@"
 done
