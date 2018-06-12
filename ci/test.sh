@@ -7,8 +7,7 @@ echo $CHANGED_DIRS
 # echo "1"
 # git diff --name-only master...
 
-git fetch origin/master -vvv
-git ls-remote origin
+git fetch origin master -vvv
 git branch -a
 
 echo "2"
