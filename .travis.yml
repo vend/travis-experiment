@@ -12,8 +12,8 @@ jobs:
   include:
     - &test-stage
       stage: test
+      if: env(IGNORE) = 0
       env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_1 IGNORE=$(./ci/test.sh)
-      # if: env(IGNORE) = 0
       script:
           - ./ci/test.sh
 
