@@ -7,9 +7,10 @@ echo $CHANGED_DIRS
 # echo "1"
 # git diff --name-only master...
 
-git fetch origin master master -vvv
+git fetch origin master master -vvv git fetch --branch=master
 #git checkout -b master --no-track
-git diff --name-only master...
+#
+git diff --name-only origin/master...
 
 
 echo "$SERVICE is us! Calling $SERVICE/ci/test.sh"
