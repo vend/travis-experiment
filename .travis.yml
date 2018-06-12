@@ -28,4 +28,3 @@ jobs:
     - <<: *test-stage
       if: env(IGNORE) = 0
       env: SERVICE="service3" SOME_OTHER_VAR="whatever" IGNORE=$(./ci/test.sh)
-
