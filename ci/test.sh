@@ -8,10 +8,7 @@ echo $CHANGED_DIRS
 # git diff --name-only master...
 
 git fetch origin master -vvv
-git branch -a
-
-echo "2"
-git diff --name-only remotes/origin/master...
+git diff --name-only master...
 
 
 echo "$SERVICE is us! Calling $SERVICE/ci/test.sh"
