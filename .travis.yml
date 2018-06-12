@@ -25,7 +25,7 @@ jobs:
 
     - <<: *test-stage
       # if: env(IGNORE) = 0
-      env: SERVICE=service2 IGNORE=$(./ci/test.sh)
+      env: SERVICE=service2 IGNORE=$(./ci/ignore.sh)
 
     - <<: *test-stage
       # if: env(IGNORE) = 0
