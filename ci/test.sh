@@ -8,6 +8,7 @@ echo $CHANGED_DIRS
 # git diff --name-only master...
 
 git fetch origin master -vvv
+git checkout --detach master
 git diff --name-only master...
 
 
