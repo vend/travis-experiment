@@ -2,14 +2,11 @@ language: go
 
 go: 1.10.x
 
-install:
-  - git fetch origin master
-  - echo "---$(./ci/services.sh)---"
+install: skip
 
 env:
   global:
       - CHANGED_DIRS2=$(./ci/services.sh)
-      - TEST_VAR=$(date)
       # - CHANGED_DIRS=@ci/services.sh@@services/service3@@services/service4@
       - CHANGED_DIRS=@ci/services.sh@@ci/test.sh@@services/service3@@services/service4@
 
