@@ -4,8 +4,8 @@ set -e
 
 echo $CHANGED_DIRS
 
-echo "1"
-git diff --name-only master...
+# echo "1"
+# git diff --name-only master...
 
 echo "2"
 git diff --name-only origin/master...
