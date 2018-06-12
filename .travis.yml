@@ -5,7 +5,8 @@ go: 1.10.x
 install: skip
 
 env:
-  - CHANGED_DIRS="service1\nservice2\n"
+  global:
+      - CHANGED_DIRS="service1\nservice2\n"
 
 jobs:
   include:
