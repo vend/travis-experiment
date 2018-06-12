@@ -2,7 +2,9 @@ language: go
 
 go: 1.10.x
 
-install: ./ci/services.sh
+install:
+  - git fetch origin master
+  - ./ci/services.sh
 
 env:
   global:
