@@ -2,7 +2,7 @@ language: go
 
 go: 1.10.x
 
-install: git fetch origin master
+install: skip
 
 env:
   global:

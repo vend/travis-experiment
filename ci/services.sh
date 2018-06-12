@@ -2,6 +2,8 @@
 
 set -e
 
+git fetch origin master
+
 CHANGED_DIRS=$(git diff --name-only FETCH_HEAD... | awk -F '/' '/.*\// {print $1 "/" $2 }' | sort | uniq)
 
 JOINED=""
