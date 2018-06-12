@@ -2,12 +2,12 @@ language: go
 
 go: 1.10.x
 
-install: skip
+install: ./ci/services.sh
 
 env:
   global:
-      - CHANGED_DIRS=$(ci/services.sh)
-      # - CHANGED_DIRS=@ci/services.sh@@services/service3@@services/service4@
+      # - CHANGED_DIRS=$(ci/services.sh)
+      - CHANGED_DIRS=@ci/services.sh@@services/service3@@services/service4@
 
 jobs:
   include:
