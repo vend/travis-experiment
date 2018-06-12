@@ -6,7 +6,7 @@ install: skip
 
 env:
   global:
-      - CHANGED_DIRS="service1\nservice2\n"
+      - CHANGED_DIRS="service1 service2"
 
 jobs:
   include:
