@@ -7,19 +7,20 @@ install: skip
 env:
   global:
       - CHANGED_DIRS="service1 service2"
+      - SOME_VAR="whatever"
 
 jobs:
   include:
     - &test-stage
       stage: test
-      env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_1 IGNORE=$(./ci/test.sh)
-      if: branch = master
+      env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_1 IGNORE=$(./ci/ignore.sh)
+      if: env(SOME_VAR) = "whatever"
       script:
           - ./ci/test.sh
 
     - <<: *test-stage
       # if: env(IGNORE) = 0
-      env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_2 IGNORE=$(./ci/test.sh)
+      env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_2 IGNORE=$(./ci/ignore.sh)
 
     - <<: *test-stage
       # if: env(IGNORE) = 0
@@ -27,4 +28,4 @@ jobs:
 
     - <<: *test-stage
       # if: env(IGNORE) = 0
-      env: SERVICE="service3" SOME_OTHER_VAR="whatever" IGNORE=$(./ci/test.sh)
+      env: SERVICE="service3" SOME_OTHER_VAR="whatever" IGNORE=$(./ci/ignore.sh)
