@@ -4,7 +4,7 @@ set -e
 
 #CHANGED_DIRS=$(git diff --name-only master...  | awk -F '/' '/.*\// {print $1 "/" $2 "/"}' | sort | uniq)
 
-CHANGED_DIRS=$(ls -1 services)
+#CHANGED_DIRS=$(ls -1 services)
 
 echo $CHANGED_DIRS
 

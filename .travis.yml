@@ -4,6 +4,9 @@ go: 1.10.x
 
 install: skip
 
+env:
+  - CHANGED_DIRS="service1\nservice2\n"
+
 jobs:
   include:
     - &test-stage
@@ -13,7 +16,7 @@ jobs:
           - ./ci/test.sh
 
     - <<: *test-stage
-      env: SERVICE="service2" APP_ENV=test TEST_SUITE=php_functional_2
+      env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_2
 
     - <<: *test-stage
       env: SERVICE=service2
