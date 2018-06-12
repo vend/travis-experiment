@@ -12,7 +12,7 @@ git fetch origin master -vvv
 #git checkout -b master --no-track
 #
 git branch -a
-git diff --name-only master...
+git diff --name-only FETCH_HEAD...
 
 
 echo "$SERVICE is us! Calling $SERVICE/ci/test.sh"
