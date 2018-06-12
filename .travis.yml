@@ -13,22 +13,22 @@ jobs:
     - &test-stage
       stage: test
       env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_1
-      if: env(CHANGED_DIRS) =~ <services\/service1>
+      if: env(CHANGED_DIRS) =~ @services\/service1@
       script:
           - ./ci/test.sh
 
     - <<: *test-stage
-      if: env(CHANGED_DIRS) =~ <services\/service1>
+      if: env(CHANGED_DIRS) =~ @services/service1@
       env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_2
 
     - <<: *test-stage
-      if: env(CHANGED_DIRS) =~ <services\/service2>
+      if: env(CHANGED_DIRS) =~ @services\/service2@
       env: SERVICE=service2
 
     - <<: *test-stage
-      if: env(CHANGED_DIRS) =~ <services\/service3>
+      if: env(CHANGED_DIRS) =~ @services\/service3@
       env: SERVICE="service3" SOME_OTHER_VAR="whatever"
 
     - <<: *test-stage
-      if: env(CHANGED_DIRS) =~ <services\/service4>
+      if: env(CHANGED_DIRS) =~ @services\/service4@
       env: SERVICE="service4"
