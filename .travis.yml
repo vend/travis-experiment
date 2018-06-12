@@ -6,27 +6,29 @@ install: skip
 
 env:
   global:
-      - CHANGED_DIRS="service1 service2"
-      - SOME_VAR="whatever"
-      - IGNORE_GLOBAL=$(./ci/ignore.sh)
+      - CHANGED_DIRS=$(ci/services.sh)
 
 jobs:
   include:
     - &test-stage
       stage: test
-      env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_1 IGNORE=$(./ci/ignore.sh)
-      if: env(CHANGED_DIRS) =~ service1
+      env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_1
+      if: env(CHANGED_DIRS) =~ <service1>
       script:
           - ./ci/test.sh
 
     - <<: *test-stage
-      if: env(CHANGED_DIRS) =~ service1
-      env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_2 IGNORE=$(./ci/ignore.sh)
+      if: env(CHANGED_DIRS) =~ <service1>
+      env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_2
 
     - <<: *test-stage
-      if: env(CHANGED_DIRS) =~ service2
-      env: SERVICE=service2 IGNORE=$(./ci/ignore.sh)
+      if: env(CHANGED_DIRS) =~ <service2>
+      env: SERVICE=service2
 
     - <<: *test-stage
-      if: env(CHANGED_DIRS) =~ service3
-      env: SERVICE="service3" SOME_OTHER_VAR="whatever" IGNORE=$(./ci/ignore.sh)
+      if: env(CHANGED_DIRS) =~ <service3>
+      env: SERVICE="service3" SOME_OTHER_VAR="whatever"
+
+    - <<: *test-stage
+      if: env(CHANGED_DIRS) =~ <service4>
+      env: SERVICE="service4"
