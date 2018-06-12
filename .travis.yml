@@ -31,5 +31,5 @@ jobs:
       env: SERVICE="service3" SOME_OTHER_VAR="whatever"
 
     - <<: *test-stage
-      if: env(CHANGED_DIRS2) =~ @services/service4@
+      if: env(CHANGED_DIRS2) =~ services.sh
       env: SERVICE="service4"
