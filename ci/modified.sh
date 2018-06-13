@@ -4,10 +4,11 @@ set -e
 
 CHANGED_DIRS=$(git fetch -q origin master && git diff --name-only FETCH_HEAD... | awk -F '/' '/.*\// {print $1 "/" $2 }' | sort | uniq)
 
-JOINED=""
 for CHANGED_DIR in $CHANGED_DIRS
 do
-    JOINED="$JOINED@$CHANGED_DIR@"
+    if [[ "$CHANGED_DIR" == "services/$SERVICE" ]]; then
+        exit 0
+    fi
 done
 
-echo $JOINED
+exit 1
