@@ -9,14 +9,14 @@ install: skip
 
 # env:
 #   global:
-#       - MULTI_SERVICE="^multi\-"
+#       - MULTI_SERVICE=^multi-
 
 jobs:
   include:
     # Run tests
     - &test-stage
       stage: test
-      env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_1
+      env: SERVICE=service1 APP_ENV=test TEST_SUITE=php_functional_1
 
       # Use this once conditions v1 is merged and remove "if" from all other jobs
       # if: branch = env(SERVICE) OR branch = env(MULTI_SERVICE)
