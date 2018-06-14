@@ -27,16 +27,21 @@ jobs:
     # - <<: *test-stage
     #   env: SERVICE="^service2\-"
 
-    # - <<: *test-stage
-      # env: SERVICE="service3" SOME_OTHER_VAR="whatever"
-
     - <<: *test-stage
       if: branch =~ ^service3 OR branch =~ ^multi-
+      env: SERVICE="service3" SOME_OTHER_VAR="whatever"
+
+    - <<: *test-stage
+      if: branch =~ ^service4 OR branch =~ ^multi-
       env: SERVICE="service4" AA=1
 
     - <<: *test-stage
       if: branch =~ ^service4 OR branch =~ ^multi-
       env: SERVICE="service4" BB=1
+
+    - <<: *test-stage
+      if: branch =~ env(SERVICE) OR branch =~ ^multi-
+      env: SERVICE=service4 CC=1
 
     # # Dev image to be used for nobob and QA
     # - &dev-deploy-stage
