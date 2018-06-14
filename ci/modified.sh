@@ -8,7 +8,7 @@ else
     CHANGED_FILES=$(git fetch -q origin master && git diff --name-only FETCH_HEAD...)
 fi
 
-CHANGED_DIRS=$(echo $CHANGED_FILES | awk -F '/' '/services\/.*\// {print $1 "/" $2 }' | sort | uniq)
+CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F '/' '/^services\// {print $1 "/" $2 }' | sort | uniq)
 
 echo "Branch: $TRAVIS_BRANCH"
 echo "Commit: $TRAVIS_COMMIT"
