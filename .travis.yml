@@ -54,7 +54,7 @@ jobs:
       script: skip
       deploy:
         - provider: script
-          script: if $(./ci/modified.sh); then ./ci/deploy.sh; else travis_terminate; fi
+          script: "if $(./ci/modified.sh); then ./ci/deploy.sh; else travis_terminate; fi"
           skip_cleanup: true
           on:
             all_branches: true
