@@ -3,11 +3,15 @@
 set -e
 
 if [[ $TRAVIS_BRANCH == "master" ]]; then
-    CHANGED_DIRS=$(git log -m -1 --name-only --pretty="format:" $TRAVIS_COMMIT | awk -F '/' '/.*\// {print $1 "/" $2 }' | sort | uniq)
+    CHANGED_FILES=$(git log -m -1 --name-only --pretty="format:" $TRAVIS_COMMIT)
 else
-    CHANGED_DIRS=$(git fetch -q origin master && git diff --name-only FETCH_HEAD... | awk -F '/' '/.*\// {print $1 "/" $2 }' | sort | uniq)
+    CHANGED_FILES=$(git fetch -q origin master && git diff --name-only FETCH_HEAD...)
 fi
 
+CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F '/' '/^services\// {print $1 "/" $2 }' | sort | uniq)
+
+echo "Branch: $TRAVIS_BRANCH"
+echo "Commit: $TRAVIS_COMMIT"
 echo -e "Directories with changes:\n$CHANGED_DIRS\n"
 
 for CHANGED_DIR in $CHANGED_DIRS
