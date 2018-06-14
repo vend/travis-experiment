@@ -48,6 +48,21 @@ jobs:
       if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service1-
       env: COMPONENT_NAME=service1 TEST_SUITE=php_functional_2
 
+    - <<: *srv-test-stage
+      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service2-
+      env: COMPONENT_NAME=service2
+
+    - <<: *srv-test-stage
+      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service3-
+      env: COMPONENT_NAME=service3 SOME_OTHER_VAR=whatever
+
+    - <<: *srv-test-stage
+      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service4-
+      env: COMPONENT_NAME=service4 AA=1
+
+    - <<: *srv-test-stage
+      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service4-
+      env: COMPONENT_NAME=service4 BB=1
 
     # Dev image to be used for nobob and QA
     - &dev-deploy-stage
@@ -58,6 +73,18 @@ jobs:
       if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service1-
       env: COMPONENT_NAME=service1
 
+    - <<: *dev-deploy-stage
+      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service2-
+      env: COMPONENT_NAME=service2
+
+    - <<: *dev-deploy-stage
+      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service3-
+      env: COMPONENT_NAME=service3
+
+    - <<: *dev-deploy-stage
+      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service4-
+      env: COMPONENT_NAME=service4
+
     # Prod image
     - &prod-deploy-stage
       stage: deploy
@@ -67,44 +94,11 @@ jobs:
       if: branch = master
       env: COMPONENT_NAME=service1
 
-
-
-    - <<: *srv-test-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service2-
+    - <<: *prod-deploy-stage
       env: COMPONENT_NAME=service2
-
-    - <<: *dev-deploy-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service2-
-      env: COMPONENT_NAME=service2
-
-      - <<: *prod-deploy-stage
-      env: COMPONENT_NAME=service2
-
-
-    - <<: *srv-test-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service3-
-      env: COMPONENT_NAME=service3 SOME_OTHER_VAR=whatever
-
-    - <<: *dev-deploy-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service3-
-      env: COMPONENT_NAME=service3
 
     - <<: *prod-deploy-stage
       env: COMPONENT_NAME=service3
-
-
-
-    - <<: *srv-test-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service4-
-      env: COMPONENT_NAME=service4 AA=1
-
-    - <<: *srv-test-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service4-
-      env: COMPONENT_NAME=service4 BB=1
-
-    - <<: *dev-deploy-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service4-
-      env: COMPONENT_NAME=service4
 
     - <<: *prod-deploy-stage
       env: COMPONENT_NAME=service4
