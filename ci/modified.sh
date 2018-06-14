@@ -10,8 +10,6 @@ fi
 
 CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F '/' '/^(srv|lib)\// {print $1 "/" $2 }' | sort | uniq)
 
-echo "Branch: $TRAVIS_BRANCH"
-echo "Commit: $TRAVIS_COMMIT"
 echo -e "Directories with changes:\n$CHANGED_DIRS\n"
 
 for CHANGED_DIR in $CHANGED_DIRS
