@@ -22,7 +22,7 @@ jobs:
       # if: branch = env(SERVICE) OR branch = env(MULTI_SERVICE)
       # and remove "if" from all other jobs
 
-      if: branch =~ ^service1 OR branch =~ ^multi-
+      if: branch =~ ^service4 OR branch =~ ^multi-
       script: if $(./ci/modified.sh); then ./ci/test.sh; else travis_terminate; fi
 
     - <<: *test-stage
