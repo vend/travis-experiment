@@ -8,11 +8,16 @@ install: skip
 # - in single service branch make sure not other dirs were modified
 # what if no dirs of interest modified? error or exit?
 
+# Branch prefixes:
+# - lib-* Work related to a specific single library eg lib-library1-feature-a
+# - srv-* Work related to a specific microservice eg srv-service1-bugfix-b
+# - multi-* Work related to multiple services or libraries eg multi-new-errors-tracker
+
 jobs:
   include:
     # Pre flight checks
     - stage: validation
-      if: NOT branch =~ ^srv- AND NOT branch =~ ^lib- AND NOT branch =~ ^multi- AND NOT branch = master
+      if: NOT branch = master AND NOT branch =~ ^multi- AND NOT branch =~ ^lib- AND NOT branch =~ ^srv-
       script:
         - echo -e "\n\nILLEGAL BRANCH NAME $TRAVIS_BRANCH\nMust begin with srv- or lib- or multi-" && exit 1
 
