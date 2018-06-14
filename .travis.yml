@@ -29,10 +29,10 @@ jobs:
       env: SERVICE="^service3\-" SOME_OTHER_VAR="whatever"
 
     - <<: *test-stage
-      env: SERVICE="^service4\-" AA=1
+      env: SERVICE="^service4" AA=1
 
     - <<: *test-stage
-      env: SERVICE="^service4-" BB=1
+      env: SERVICE="^service4" BB=1
 
     # # Dev image to be used for nobob and QA
     # - &dev-deploy-stage
