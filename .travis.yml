@@ -23,7 +23,9 @@ jobs:
       # and remove "if" from all other jobs
 
       if: branch =~ ^service4 OR branch =~ ^multi-
-      script: if $(./ci/modified.sh); then ./ci/test.sh; else travis_terminate; fi
+      script:
+        - ./ci/modified.sh || travis_terminate
+        - ./ci/test.sh
 
     - <<: *test-stage
       if: branch =~ ^service1 OR branch =~ ^multi-
@@ -51,13 +53,9 @@ jobs:
       env: APP_ENV=dev SERVICE="1"
       #if: branch =~ ^env(SERVICE)\- or branch =~ ^env(MULTI_SERVICE)\-
       if: branch =~ ^service4 OR branch =~ ^multi-
-      script: ./ci/modified.sh || travis_terminate
-      deploy:
-        - provider: script
-          script: ./ci/deploy.sh
-          skip_cleanup: true
-          on:
-            all_branches: true
+      script:
+        - ./ci/modified.sh || travis_terminate
+        - ./ci/test.sh
 
     - <<: *dev-deploy-stage
       if: branch =~ ^service2 OR branch =~ ^multi-
@@ -72,15 +70,11 @@ jobs:
       env: APP_ENV=dev SERVICE="4"
 
 
-
-#     # Prod image
-#     - stage: deploy
-#       env: APP_ENV=prod CLUSTER=production
-#       script: skip
-#       deploy:
-#         - provider: script
-#           script: ./ci/deploy.sh
-#           skip_cleanup: true
-#           on:
-#             branch: master
-# 1
+    # Prod image
+    # - &prod-deploy-stage
+    #   stage: deploy
+    #   env: APP_ENV=prod CLUSTER=production
+    #   if: branch =~ ^service4 OR branch =~ ^multi-
+    #   script:
+    #     - ./ci/modified.sh || travis_terminate
+    #     - ./ci/test.sh
