@@ -4,7 +4,8 @@ go: 1.10.x
 
 install: skip
 
-#conditions: v1
+conditions:
+  version: v1
 
 env:
   global:
