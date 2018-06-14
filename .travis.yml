@@ -26,10 +26,10 @@ jobs:
     - &lib-test-stage
       stage: test libraries
       if: branch =~ ^lib-library1- OR branch =~ ^multi- OR branch = master
-      env: LIBRARY=library1 TEST_SUITE=php_functional_1
+      env: COMPONENT_NAME=library1 TEST_SUITE=php_functional_1
       script:
-        - ./ci/modified.sh || travis_terminate
-        - BUILD_ENV=test COMPONENT_TYPE=lib ./ci/test.sh
+        - COMPONENT_TYPE=lib ./ci/modified.sh || travis_terminate
+        - COMPONENT_TYPE=lib ./ci/test.sh
 
     - <<: *lib-test-stage
       if: branch =~ ^lib-library2- OR branch =~ ^multi- OR branch = master
@@ -44,7 +44,7 @@ jobs:
       # if: branch = env(COMPONENT_NAME) OR branch = env(MULTI_SERVICE)
       env: COMPONENT_NAME=service1 TEST_SUITE=php_functional_1
       script:
-        - ./ci/modified.sh || travis_terminate
+        - COMPONENT_TYPE=srv ./ci/modified.sh || travis_terminate
         - BUILD_ENV=test COMPONENT_TYPE=srv ./ci/test.sh
 
     - <<: *srv-test-stage
