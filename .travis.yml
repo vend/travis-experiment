@@ -11,39 +11,47 @@ install: skip
 #   global:
 #       - MULTI_SERVICE=^multi-
 
+# todo:
+# - in single service branch make sure not other dirs were modified
+# - job to fail if branch prefix does not match srv-* or master or lib-* or multi-*
+# - srv-turnstile-refactor-this-and-that
+
 jobs:
   include:
+    - stage: validation
+      if: NOT branch =~ ^srv- AND NOT branch =~ ^lib- AND NOT branch =~ ^multi- AND NOT branch = master
+      script:
+        - echo "ILLEGAL BRANCH NAME $TRAVIS_BRANCH" && exit 1
+
     # Run tests
     - &test-stage
       stage: test
-      env: SERVICE=service1 APP_ENV=test TEST_SUITE=php_functional_1
-
+      if: branch =~ ^srv-service1- OR branch =~ ^multi- OR branch = master
       # Use this once conditions v1 is merged and remove "if" from all other jobs
       # if: branch = env(SERVICE) OR branch = env(MULTI_SERVICE)
-
-      if: branch =~ ^service1- OR branch =~ ^multi- OR branch = master
+      env: SERVICE=service1 APP_ENV=test TEST_SUITE=php_functional_1
       script:
         - ./ci/modified.sh || travis_terminate
-        - ./ci/test.sh
+        - ./ci/deploy.sh
 
     - <<: *test-stage
-      if: branch =~ ^service1- OR branch =~ ^multi- OR branch = master
+      if: branch =~ ^srv-service1- OR branch =~ ^multi- OR branch = master
       env: SERVICE=service1 APP_ENV=test TEST_SUITE=php_functional_2
 
     - <<: *test-stage
-      if: branch =~ ^service2- OR branch =~ ^multi- OR branch = master
+      if: branch =~ ^srv-service2- OR branch =~ ^multi- OR branch = master
       env: SERVICE=service2
 
     - <<: *test-stage
-      if: branch =~ ^service3- OR branch =~ ^multi- OR branch = master
+      if: branch =~ ^srv-service3- OR branch =~ ^multi- OR branch = master
       env: SERVICE=service3 SOME_OTHER_VAR=whatever
 
     - <<: *test-stage
-      if: branch =~ ^service4- OR branch =~ ^multi- OR branch = master
+      if: branch =~ ^srv-service4- OR branch =~ ^multi- OR branch = master
       env: SERVICE=service4 AA=1
 
     - <<: *test-stage
-      if: branch =~ ^service4- OR branch =~ ^multi- OR branch = master
+      if: branch =~ ^srv-service4- OR branch =~ ^multi- OR branch = master
       env: SERVICE=service4 BB=1
 
     # Dev image to be used for nobob and QA
@@ -51,21 +59,21 @@ jobs:
       stage: deploy
       env: APP_ENV=dev SERVICE=service1
       #if: branch =~ ^env(SERVICE)\- OR branch =~ ^env(MULTI_SERVICE)\-
-      if: branch =~ ^service1- OR branch =~ ^multi- OR branch = master
+      if: branch =~ ^srv-service1- OR branch =~ ^multi- OR branch = master
       script:
         - ./ci/modified.sh || travis_terminate
         - ./ci/deploy.sh
 
     - <<: *dev-deploy-stage
-      if: branch =~ ^service2- OR branch =~ ^multi- OR branch = master
+      if: branch =~ ^srv-service2- OR branch =~ ^multi- OR branch = master
       env: APP_ENV=dev SERVICE=service2
 
     - <<: *dev-deploy-stage
-      if: branch =~ ^service3- OR branch =~ ^multi- OR branch = master
+      if: branch =~ ^srv-service3- OR branch =~ ^multi- OR branch = master
       env: APP_ENV=dev SERVICE=service3
 
     - <<: *dev-deploy-stage
-      if: branch =~ ^service4- OR branch =~ ^multi- OR branch = master
+      if: branch =~ ^srv-service4- OR branch =~ ^multi- OR branch = master
       env: APP_ENV=dev SERVICE=service4
 
     # Prod image
