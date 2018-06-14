@@ -1,0 +1,1 @@
+echo "WE ARE DEPLOYING $SERVICE!!"

@@ -7,9 +7,9 @@ install: skip
 # conditions:
 #   version: v1
 
-env:
-  global:
-      - MULTI_SERVICE="^multi\-"
+# env:
+#   global:
+#       - MULTI_SERVICE="^multi\-"
 
 jobs:
   include:
@@ -17,7 +17,11 @@ jobs:
     - &test-stage
       stage: test
       env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_1
+
+      # Use this once conditions v1 is merged
       # if: branch = env(SERVICE) OR branch = env(MULTI_SERVICE)
+      # and remove "if" from all other jobs
+
       if: branch =~ ^service1 OR branch =~ ^multi-
       script: if $(./ci/modified.sh); then ./ci/test.sh; else travis_terminate; fi
 
@@ -41,31 +45,31 @@ jobs:
       if: branch =~ ^service4 OR branch =~ ^multi-
       env: SERVICE=service4 BB=1
 
-    - <<: *test-stage
-      if: branch =~ env(SERVICE) OR branch =~ ^multi-
-      env: SERVICE=service4 CC=1
+    # Dev image to be used for nobob and QA
+    - &dev-deploy-stage
+      stage: deploy
+      env: APP_ENV=dev SERVICE="1"
+      #if: branch =~ ^env(SERVICE)\- or branch =~ ^env(MULTI_SERVICE)\-
+      if: branch =~ ^service1 OR branch =~ ^multi-
+      script: if $(./ci/modified.sh); then ./ci/test.sh; else travis_terminate; fi
+      deploy:
+        - provider: script
+          script: ./ci/deploy.sh
+          skip_cleanup: true
+          on:
+            all_branches: true
 
-    # # Dev image to be used for nobob and QA
-    # - &dev-deploy-stage
-    #   stage: deploy
-    #   env: APP_ENV=dev SERVICE="1"
-    #   if: branch =~ ^env(SERVICE)\- or branch =~ ^env(MULTI_SERVICE)\-
-    #   script: if $(./ci/modified.sh); then ./ci/test.sh; else travis_terminate; fi
-    #   deploy:
-    #     - provider: script
-    #       script: ./ci/deploy.sh
-    #       skip_cleanup: true
-    #       on:
-    #         all_branches: true
+    - <<: *dev-deploy-stage
+      if: branch =~ ^service2 OR branch =~ ^multi-
+      env: APP_ENV=dev SERVICE="2"
 
-    # - <<: *dev-deploy-stage
-    #   env: APP_ENV=dev SERVICE="2"
+    - <<: *dev-deploy-stage
+      if: branch =~ ^service3 OR branch =~ ^multi-
+      env: APP_ENV=dev SERVICE="3"
 
-    # - <<: *dev-deploy-stage
-    #   env: APP_ENV=dev SERVICE="3"
-
-    # - <<: *dev-deploy-stage
-    #   env: APP_ENV=dev SERVICE="4"
+    - <<: *dev-deploy-stage
+      if: branch =~ ^service4 OR branch =~ ^multi-
+      env: APP_ENV=dev SERVICE="4"
 
 
 
