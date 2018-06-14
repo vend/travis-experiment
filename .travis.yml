@@ -22,59 +22,59 @@ jobs:
       # if: branch = env(SERVICE) OR branch = env(MULTI_SERVICE)
       # and remove "if" from all other jobs
 
-      if: branch =~ ^service4 OR branch =~ ^multi-
+      if: branch =~ ^service1- OR branch =~ ^multi-
       script:
         - ./ci/modified.sh || travis_terminate
         - ./ci/test.sh
 
     - <<: *test-stage
-      if: branch =~ ^service1 OR branch =~ ^multi-
+      if: branch =~ ^service1- OR branch =~ ^multi-
       env: SERVICE=service1 APP_ENV=test TEST_SUITE=php_functional_2
 
     - <<: *test-stage
-      if: branch =~ ^service2 OR branch =~ ^multi-
-      env: SERVICE=^service2\-
+      if: branch =~ ^service2- OR branch =~ ^multi-
+      env: SERVICE=service2
 
     - <<: *test-stage
-      if: branch =~ ^service3 OR branch =~ ^multi-
+      if: branch =~ ^service3- OR branch =~ ^multi-
       env: SERVICE=service3 SOME_OTHER_VAR=whatever
 
     - <<: *test-stage
-      if: branch =~ ^service4 OR branch =~ ^multi-
+      if: branch =~ ^service4- OR branch =~ ^multi-
       env: SERVICE=service4 AA=1
 
     - <<: *test-stage
-      if: branch =~ ^service4 OR branch =~ ^multi-
+      if: branch =~ ^service4- OR branch =~ ^multi-
       env: SERVICE=service4 BB=1
 
     # Dev image to be used for nobob and QA
     - &dev-deploy-stage
       stage: deploy
-      env: APP_ENV=dev SERVICE="service1"
-      #if: branch =~ ^env(SERVICE)\- or branch =~ ^env(MULTI_SERVICE)\-
-      if: branch =~ ^service4 OR branch =~ ^multi-
+      env: APP_ENV=dev SERVICE=service1
+      #if: branch =~ ^env(SERVICE)\- OR branch =~ ^env(MULTI_SERVICE)\-
+      if: branch =~ ^service1- OR branch =~ ^multi-
       script:
         - ./ci/modified.sh || travis_terminate
         - ./ci/deploy.sh
 
     - <<: *dev-deploy-stage
-      if: branch =~ ^service2 OR branch =~ ^multi-
-      env: APP_ENV=dev SERVICE="service2"
+      if: branch =~ ^service2- OR branch =~ ^multi-
+      env: APP_ENV=dev SERVICE=service2
 
     - <<: *dev-deploy-stage
-      if: branch =~ ^service3 OR branch =~ ^multi-
-      env: APP_ENV=dev SERVICE="service3"
+      if: branch =~ ^service3- OR branch =~ ^multi-
+      env: APP_ENV=dev SERVICE=service3
 
     - <<: *dev-deploy-stage
-      if: branch =~ ^service4 OR branch =~ ^multi-
-      env: APP_ENV=dev SERVICE="service4"
+      if: branch =~ ^service4- OR branch =~ ^multi-
+      env: APP_ENV=dev SERVICE=service4
 # here what if branch master?
 
     # Prod image
     # - &prod-deploy-stage
     #   stage: deploy
     #   env: APP_ENV=prod CLUSTER=production
-    #   if: branch =~ ^service4 OR branch =~ ^multi-
+    #   if: branch =~ ^service4- OR branch =~ ^multi-
     #   script:
     #     - ./ci/modified.sh || travis_terminate
     #     - ./ci/test.sh
