@@ -8,7 +8,7 @@ else
     CHANGED_FILES=$(git fetch -q origin master && git diff --name-only FETCH_HEAD...)
 fi
 
-CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F '/' '/^services\// {print $1 "/" $2 }' | sort | uniq)
+CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F '/' '/^(srv|lib)\// {print $1 "/" $2 }' | sort | uniq)
 
 echo "Branch: $TRAVIS_BRANCH"
 echo "Commit: $TRAVIS_COMMIT"
@@ -16,12 +16,12 @@ echo -e "Directories with changes:\n$CHANGED_DIRS\n"
 
 for CHANGED_DIR in $CHANGED_DIRS
 do
-    if [[ "$CHANGED_DIR" == "services/$SERVICE" ]]; then
-        echo -e "Service $SERVICE was updated, PROCEED"
+    if [[ "$CHANGED_DIR" == "$COMPONENT_TYPE/$COMPONENT_NAME" ]]; then
+        echo -e "Component $COMPONENT_TYPE $COMPONENT_NAME was updated, PROCEED"
         exit 0
     fi
 done
 
-echo -e "Service $SERVICE was NOT updated, SKIP"
+echo -e "Component $COMPONENT_TYPE $COMPONENT_NAME was NOT updated, SKIP"
 
 exit 1

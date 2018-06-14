@@ -13,83 +13,96 @@ install: skip
 
 # todo:
 # - in single service branch make sure not other dirs were modified
-# - job to fail if branch prefix does not match srv-* or master or lib-* or multi-*
-# - srv-turnstile-refactor-this-and-that
 
 jobs:
   include:
+    # Pre flight checks
     - stage: validation
       if: NOT branch =~ ^srv- AND NOT branch =~ ^lib- AND NOT branch =~ ^multi- AND NOT branch = master
       script:
         - echo -e "\n\nILLEGAL BRANCH NAME $TRAVIS_BRANCH\nMust begin with srv- or lib- or multi-" && exit 1
 
-    # Run tests
-    - &test-stage
-      stage: test
-      if: branch =~ ^srv-service1- OR branch =~ ^multi- OR branch = master
-      # Use this once conditions v1 is merged and remove "if" from all other jobs
-      # if: branch = env(SERVICE) OR branch = env(MULTI_SERVICE)
-      env: SERVICE=service1 APP_ENV=test TEST_SUITE=php_functional_1
+    # Test libraries
+    - &lib-test-stage
+      stage: test libraries
+      if: branch =~ ^lib-library1- OR branch =~ ^multi- OR branch = master
+      env: LIBRARY=library1 TEST_SUITE=php_functional_1
       script:
         - ./ci/modified.sh || travis_terminate
-        - ./ci/deploy.sh
+        - BUILD_ENV=test COMPONENT_TYPE=lib ./ci/test.sh
 
-    - <<: *test-stage
+    - <<: *lib-test-stage
+      if: branch =~ ^lib-library2- OR branch =~ ^multi- OR branch = master
+      env: COMPONENT_NAME=library2 TEST_SUITE=php_functional_2
+
+
+    # Test services
+    - &srv-test-stage
+      stage: test services
       if: branch =~ ^srv-service1- OR branch =~ ^multi- OR branch = master
-      env: SERVICE=service1 APP_ENV=test TEST_SUITE=php_functional_2
+      # Use this once conditions v1 is merged and remove "if" from all other jobs
+      # if: branch = env(COMPONENT_NAME) OR branch = env(MULTI_SERVICE)
+      env: COMPONENT_NAME=service1 TEST_SUITE=php_functional_1
+      script:
+        - ./ci/modified.sh || travis_terminate
+        - BUILD_ENV=test COMPONENT_TYPE=srv ./ci/test.sh
 
-    - <<: *test-stage
+    - <<: *srv-test-stage
+      if: branch =~ ^srv-service1- OR branch =~ ^multi- OR branch = master
+      env: COMPONENT_NAME=service1 TEST_SUITE=php_functional_2
+
+    - <<: *srv-test-stage
       if: branch =~ ^srv-service2- OR branch =~ ^multi- OR branch = master
-      env: SERVICE=service2
+      env: COMPONENT_NAME=service2
 
-    - <<: *test-stage
+    - <<: *srv-test-stage
       if: branch =~ ^srv-service3- OR branch =~ ^multi- OR branch = master
-      env: SERVICE=service3 SOME_OTHER_VAR=whatever
+      env: COMPONENT_NAME=service3 SOME_OTHER_VAR=whatever
 
-    - <<: *test-stage
+    - <<: *srv-test-stage
       if: branch =~ ^srv-service4- OR branch =~ ^multi- OR branch = master
-      env: SERVICE=service4 AA=1
+      env: COMPONENT_NAME=service4 AA=1
 
-    - <<: *test-stage
+    - <<: *srv-test-stage
       if: branch =~ ^srv-service4- OR branch =~ ^multi- OR branch = master
-      env: SERVICE=service4 BB=1
+      env: COMPONENT_NAME=service4 BB=1
 
     # Dev image to be used for nobob and QA
     - &dev-deploy-stage
       stage: deploy
-      env: APP_ENV=dev SERVICE=service1
+      env: COMPONENT_NAME=service1
       #if: branch =~ ^env(SERVICE)\- OR branch =~ ^env(MULTI_SERVICE)\-
       if: branch =~ ^srv-service1- OR branch =~ ^multi- OR branch = master
       script:
         - ./ci/modified.sh || travis_terminate
-        - ./ci/deploy.sh
+        - BUILD_ENV=dev ./ci/deploy.sh
 
     - <<: *dev-deploy-stage
       if: branch =~ ^srv-service2- OR branch =~ ^multi- OR branch = master
-      env: APP_ENV=dev SERVICE=service2
+      env: COMPONENT_NAME=service2
 
     - <<: *dev-deploy-stage
       if: branch =~ ^srv-service3- OR branch =~ ^multi- OR branch = master
-      env: APP_ENV=dev SERVICE=service3
+      env: COMPONENT_NAME=service3
 
     - <<: *dev-deploy-stage
       if: branch =~ ^srv-service4- OR branch =~ ^multi- OR branch = master
-      env: APP_ENV=dev SERVICE=service4
+      env: COMPONENT_NAME=service4
 
     # Prod image
     - &prod-deploy-stage
       stage: deploy
-      env: APP_ENV=prod SERVICE=service1
+      env: COMPONENT_NAME=service1
       if: branch = master
       script:
         - ./ci/modified.sh || travis_terminate
-        - ./ci/deploy.sh
+        - BUILD_ENV=dev ./ci/deploy.sh
 
     - <<: *prod-deploy-stage
-      env: APP_ENV=prod SERVICE=service2
+      env: COMPONENT_NAME=service2
 
     - <<: *prod-deploy-stage
-      env: APP_ENV=prod SERVICE=service3
+      env: COMPONENT_NAME=service3
 
     - <<: *prod-deploy-stage
-      env: APP_ENV=prod SERVICE=service4
+      env: COMPONENT_NAME=service4

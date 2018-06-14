@@ -1,4 +1,4 @@
-echo "WE ARE DEPLOYING $SERVICE to $APP_ENV!!"
+echo "WE ARE DEPLOYING $COMPONENT_NAME to $BUILD_ENV!"
 
 # pretend we do some work
 sleep 60
