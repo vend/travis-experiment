@@ -21,23 +21,25 @@ jobs:
       if: branch =~ ^service1 || branch =~ ^multi-
       script: if $(./ci/modified.sh); then ./ci/test.sh; else travis_terminate; fi
 
-    # - <<: *test-stage
-    #   env: SERVICE="^service1\-" APP_ENV=test TEST_SUITE=php_functional_2
+    - <<: *test-stage
+      if: branch =~ ^service1 OR branch =~ ^multi-
+      env: SERVICE=service1 APP_ENV=test TEST_SUITE=php_functional_2
 
-    # - <<: *test-stage
-    #   env: SERVICE="^service2\-"
+    - <<: *test-stage
+      if: branch =~ ^service2 OR branch =~ ^multi-
+      env: SERVICE=^service2\-
 
     - <<: *test-stage
       if: branch =~ ^service3 OR branch =~ ^multi-
-      env: SERVICE="service3" SOME_OTHER_VAR="whatever"
+      env: SERVICE=service3 SOME_OTHER_VAR=whatever
 
     - <<: *test-stage
       if: branch =~ ^service4 OR branch =~ ^multi-
-      env: SERVICE="service4" AA=1
+      env: SERVICE=service4 AA=1
 
     - <<: *test-stage
       if: branch =~ ^service4 OR branch =~ ^multi-
-      env: SERVICE="service4" BB=1
+      env: SERVICE=service4 BB=1
 
     - <<: *test-stage
       if: branch =~ env(SERVICE) OR branch =~ ^multi-
