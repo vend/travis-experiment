@@ -51,10 +51,10 @@ jobs:
       env: APP_ENV=dev SERVICE="1"
       #if: branch =~ ^env(SERVICE)\- or branch =~ ^env(MULTI_SERVICE)\-
       if: branch =~ ^service4 OR branch =~ ^multi-
-      script: if $(./ci/modified.sh); then ./ci/test.sh; else travis_terminate; fi
+      script: skip
       deploy:
         - provider: script
-          script: ./ci/deploy.sh
+          script: if $(./ci/modified.sh); then ./ci/deploy.sh; else travis_terminate; fi
           skip_cleanup: true
           on:
             all_branches: true
