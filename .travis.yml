@@ -19,7 +19,7 @@ jobs:
       # env: SERVICE="^service1\-" APP_ENV=test TEST_SUITE=php_functional_1
       if: branch =~ env(SERVICE)
       # OR branch =~ env(MULTI_SERVICE)
-    #   #script: if $(./ci/modified.sh); then ./ci/test.sh; else travis_terminate; fi
+      script: if $(./ci/modified.sh); then ./ci/test.sh; else travis_terminate; fi
 
     # - <<: *test-stage
     #   env: SERVICE="^service1\-" APP_ENV=test TEST_SUITE=php_functional_2
