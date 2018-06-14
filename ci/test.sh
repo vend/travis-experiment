@@ -2,8 +2,9 @@
 
 set -e
 
-echo "$SERVICE is us! Calling $SERVICE/ci/test.sh"
-"services/"$SERVICE/ci/test.sh
+echo "$COMPONENT_TYPE $COMPONENT_NAME is us!"
+echo "Calling $COMPONENT_TYPE/$COMPONENT_NAME/ci/test.sh"
+"$COMPONENT_TYPE/$COMPONENT_NAME"/ci/test.sh
 
 # pretend we do some work
 sleep 60
