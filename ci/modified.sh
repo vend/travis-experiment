@@ -3,7 +3,7 @@
 set -e
 
 if [[ $TRAVIS_BRANCH == "master" ]]; then
-    CHANGED_DIRS=$(git log -m -1 --name-only --pretty="format:" $TRAVIS_COMMIT | grep . | sort | uniq)
+    CHANGED_DIRS=$(git log -m -1 --name-only --pretty="format:" $TRAVIS_COMMIT | awk -F '/' '/.*\// {print $1 "/" $2 }' | sort | uniq)
 else
     CHANGED_DIRS=$(git fetch -q origin master && git diff --name-only FETCH_HEAD... | awk -F '/' '/.*\// {print $1 "/" $2 }' | sort | uniq)
 fi
