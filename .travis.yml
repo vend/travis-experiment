@@ -21,7 +21,7 @@ jobs:
     - stage: validation
       if: NOT branch =~ ^srv- AND NOT branch =~ ^lib- AND NOT branch =~ ^multi- AND NOT branch = master
       script:
-        - echo "ILLEGAL BRANCH NAME $TRAVIS_BRANCH" && exit 1
+        - echo -e "\n\nILLEGAL BRANCH NAME $TRAVIS_BRANCH\nMust begin with srv- or lib- or multi-" && exit 1
 
     # Run tests
     - &test-stage
