@@ -50,7 +50,7 @@ jobs:
       stage: deploy
       env: APP_ENV=dev SERVICE="1"
       #if: branch =~ ^env(SERVICE)\- or branch =~ ^env(MULTI_SERVICE)\-
-      if: branch =~ ^service1 OR branch =~ ^multi-
+      if: branch =~ ^service4 OR branch =~ ^multi-
       script: if $(./ci/modified.sh); then ./ci/test.sh; else travis_terminate; fi
       deploy:
         - provider: script
