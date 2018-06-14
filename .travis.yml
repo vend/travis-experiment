@@ -8,28 +8,31 @@ install: skip
 
 env:
   global:
-      - MULTI_SERVICE=multi
+      - MULTI_SERVICE="^multi\-"
 
 jobs:
   include:
     # Run tests
     - &test-stage
       stage: test
-      env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_1
-      if: branch =~ ^env(SERVICE)\- or branch =~ ^env(MULTI_SERVICE)\-
+      env: SERVICE="^service1\-" APP_ENV=test TEST_SUITE=php_functional_1
+      if: branch =~ env(SERVICE) or branch =~ env(MULTI_SERVICE)
       script: if $(./ci/modified.sh); then ./ci/test.sh; else travis_terminate; fi
 
     - <<: *test-stage
-      env: SERVICE="service1" APP_ENV=test TEST_SUITE=php_functional_2
+      env: SERVICE="^service1\-" APP_ENV=test TEST_SUITE=php_functional_2
 
     - <<: *test-stage
-      env: SERVICE=service2
+      env: SERVICE="^service2\-"
 
     - <<: *test-stage
-      env: SERVICE="service3" SOME_OTHER_VAR="whatever"
+      env: SERVICE="^service3\-" SOME_OTHER_VAR="whatever"
 
     - <<: *test-stage
-      env: SERVICE="service4"
+      env: SERVICE="^service4\-" AA=1
+
+    - <<: *test-stage
+      env: SERVICE="^service4-" BB=1
 
     # # Dev image to be used for nobob and QA
     # - &dev-deploy-stage
