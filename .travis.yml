@@ -4,13 +4,6 @@ go: 1.10.x
 
 install: skip
 
-# conditions:
-#   version: v1
-
-# env:
-#   global:
-#       - MULTI_SERVICE=^multi-
-
 # todo:
 # - in single service branch make sure not other dirs were modified
 
@@ -25,11 +18,11 @@ jobs:
     # Test libraries
     - &lib-test-stage
       stage: test libraries
-      if: branch =~ ^lib-library1- OR branch =~ ^multi- OR branch = master
-      env: COMPONENT_NAME=library1 TEST_SUITE=php_functional_1
       script:
         - COMPONENT_TYPE=lib ./ci/modified.sh || travis_terminate
         - COMPONENT_TYPE=lib ./ci/test.sh
+      if: branch =~ ^lib-library1- OR branch =~ ^multi- OR branch = master
+      env: COMPONENT_NAME=library1 TEST_SUITE=php_functional_1
 
     - <<: *lib-test-stage
       if: branch =~ ^lib-library2- OR branch =~ ^multi- OR branch = master
@@ -39,13 +32,11 @@ jobs:
     # Test services
     - &srv-test-stage
       stage: test services
-      if: branch =~ ^srv-service1- OR branch =~ ^multi- OR branch = master
-      # Use this once conditions v1 is merged and remove "if" from all other jobs
-      # if: branch = env(COMPONENT_NAME) OR branch = env(MULTI_SERVICE)
-      env: COMPONENT_NAME=service1 TEST_SUITE=php_functional_1
       script:
         - COMPONENT_TYPE=srv ./ci/modified.sh || travis_terminate
         - BUILD_ENV=test COMPONENT_TYPE=srv ./ci/test.sh
+      if: branch =~ ^srv-service1- OR branch =~ ^multi- OR branch = master
+      env: COMPONENT_NAME=service1 TEST_SUITE=php_functional_1
 
     - <<: *srv-test-stage
       if: branch =~ ^srv-service1- OR branch =~ ^multi- OR branch = master
@@ -70,12 +61,11 @@ jobs:
     # Dev image to be used for nobob and QA
     - &dev-deploy-stage
       stage: deploy
-      env: COMPONENT_NAME=service1
-      #if: branch =~ ^env(SERVICE)\- OR branch =~ ^env(MULTI_SERVICE)\-
-      if: branch =~ ^srv-service1- OR branch =~ ^multi- OR branch = master
       script:
-        - ./ci/modified.sh || travis_terminate
+        - COMPONENT_TYPE=srv ./ci/modified.sh || travis_terminate
         - BUILD_ENV=dev ./ci/deploy.sh
+      if: branch =~ ^srv-service1- OR branch =~ ^multi- OR branch = master
+      env: COMPONENT_NAME=service1
 
     - <<: *dev-deploy-stage
       if: branch =~ ^srv-service2- OR branch =~ ^multi- OR branch = master
@@ -92,11 +82,11 @@ jobs:
     # Prod image
     - &prod-deploy-stage
       stage: deploy
-      env: COMPONENT_NAME=service1
-      if: branch = master
       script:
-        - ./ci/modified.sh || travis_terminate
+        - COMPONENT_TYPE=srv ./ci/modified.sh || travis_terminate
         - BUILD_ENV=dev ./ci/deploy.sh
+      if: branch = master
+      env: COMPONENT_NAME=service1
 
     - <<: *prod-deploy-stage
       env: COMPONENT_NAME=service2
