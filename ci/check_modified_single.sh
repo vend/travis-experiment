@@ -13,6 +13,7 @@ MODIFIED_DIRS=$(./ci/modified_dirs.sh)
 
 echo -e "Directories with changes:\n$MODIFIED_DIRS\n"
 
+COMPONENT_DIR=""
 THIS_MODIFIED=false
 OTHERS_MODIFIED=false
 
@@ -20,19 +21,24 @@ for MODIFIED_DIR in $MODIFIED_DIRS
 do
     if [[ ${TRAVIS_BRANCH/-//} =~ ^${MODIFIED_DIR}- ]] ; then
         THIS_MODIFIED=true
+        COMPONENT_DIR="$MODIFIED_DIR"
     else
         OTHERS_MODIFIED=true
     fi
 done
 
-echo "$THIS_MODIFIED $OTHERS_MODIFIED "
-
 if [[ $OTHERS_MODIFIED == true ]] ; then
     echo -e "Other components modified in a single component $TRAVIS_BRANCH branch, FAIL BUILD"
     exit 1
 elif [[ $THIS_MODIFIED == true ]] ; then
-    echo -e "Single component $TRAVIS_BRANCH was modified, PROCEED"
-    exit 0
+    # Check that the component is registered in travis file
+    if grep -q "branch =~ ^${COMPONENT_DIR/\//-}-" .travis.yml ; then
+        echo -e "Single component $TRAVIS_BRANCH was modified, PROCEED"
+        exit 0
+    else
+        echo -e "Component modified in branch $TRAVIS_BRANCH is not registered in .travis.yml, FAIL BUILD"
+        exit 0
+    fi
 else
     echo -e "No files were modified, FAIL BUILD"
     exit 1

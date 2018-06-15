@@ -13,6 +13,9 @@ install: skip
 # - srv-* Work related to a specific microservice eg srv-rider-bugfix-b
 # - multi-* Work related to multiple services or libraries eg multi-switch-to-new-error-tracker
 
+# Limitations:
+# - Currently, the way check_modified_single.sh works relies on component names no having dashes or there could be mismatches
+
 jobs:
   include:
     # Pre-flight checks
