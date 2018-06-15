@@ -3,6 +3,10 @@
 # In a single component branch make sure no other dirs were modified, if such found stop build
 # Also, make sure that the component dir was actually modified, if not stop build too
 
+# Note current limitation of this script is that component names should not have dashes in their names
+# Otherwise matching directory <=> service which we get from branch name can break if there are
+# components with similar names eg "reporting" and "reporting-web"
+
 set -e
 
 MODIFIED_DIRS=$(./ci/modified_dirs.sh)
@@ -14,14 +18,14 @@ OTHERS_MODIFIED=false
 
 for MODIFIED_DIR in $MODIFIED_DIRS
 do
-    if [[ "$MODIFIED_DIR" =~ "^${TRAVIS_BRANCH/-/\///}-" ]]; then
+    if [[ ${TRAVIS_BRANCH/-//} =~ ^${MODIFIED_DIR}- ]] ; then
         THIS_MODIFIED=true
     else
         OTHERS_MODIFIED=true
     fi
 done
 
-echo "$OTHERS_MODIFIED $THIS_MODIFIED"
+echo "$THIS_MODIFIED $OTHERS_MODIFIED "
 
 if [[ $OTHERS_MODIFIED == true ]] ; then
     echo -e "Other components modified in a single component $TRAVIS_BRANCH branch, FAIL BUILD"
