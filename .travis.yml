@@ -20,19 +20,19 @@ jobs:
   include:
     # Pre-flight checks
     - stage: check
-      env: DESCR="Branch name"
+      env: CHECK="Branch name"
       if: NOT branch = master AND NOT branch =~ ^multi- AND NOT branch =~ ^lib- AND NOT branch =~ ^srv-
       script:
         - echo -e "\n\nILLEGAL BRANCH NAME $TRAVIS_BRANCH\nMust begin with srv- or lib- or multi-" && exit 1
 
     - stage: check
-      env: DESCR="Modified files in multiple components"
+      env: CHECK="Modified files in multiple components"
       if: branch =~ ^multi-
       script:
         - ./ci/check_modified_multi.sh
 
     - stage: check
-      env: DESCR="Modified files in a single component"
+      env: CHECK="Modified files in a single component"
       if: branch =~ ^lib- OR branch =~ ^srv-
       script:
         - ./ci/check_modified_single.sh
