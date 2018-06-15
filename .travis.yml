@@ -5,27 +5,41 @@ go: 1.10.x
 install: skip
 
 # todo:
-# - in single service branch make sure not other dirs were modified
-# what if no dirs of interest modified? error or exit?
+# - try real go service with 3rd party and local deps
+# - add skeleton lib & skeleton service for new libs and services to be baste on for consistency
 
 # Branch prefixes:
-# - lib-* Work related to a specific single library eg lib-library1-feature-a
-# - srv-* Work related to a specific microservice eg srv-service1-bugfix-b
-# - multi-* Work related to multiple services or libraries eg multi-new-errors-tracker
+# - lib-* Work related to a specific single library eg lib-unicorn-feature-a
+# - srv-* Work related to a specific microservice eg srv-rider-bugfix-b
+# - multi-* Work related to multiple services or libraries eg multi-switch-to-new-error-tracker
 
 jobs:
   include:
-    # Pre flight checks
-    - stage: validation
+    # Pre-flight checks
+    - stage: check
+      env: DESCR="Branch name"
       if: NOT branch = master AND NOT branch =~ ^multi- AND NOT branch =~ ^lib- AND NOT branch =~ ^srv-
       script:
         - echo -e "\n\nILLEGAL BRANCH NAME $TRAVIS_BRANCH\nMust begin with srv- or lib- or multi-" && exit 1
+
+    - stage: check
+      env: DESCR="Modified files in multiple components"
+      if: branch =~ ^multi-
+      script:
+        - ./ci/check_modified_multi.sh
+
+    - stage: check
+      env: DESCR="Modified files in a single component"
+      if: branch =~ ^lib- OR branch =~ ^srv-
+      script:
+        - ./ci/check_modified_single.sh
+
 
     # Test libraries
     - &lib-test-stage
       stage: test libraries
       script:
-        - COMPONENT_TYPE=lib ./ci/modified.sh || travis_terminate
+        - COMPONENT_TYPE=lib ./ci/check_modified.sh || travis_terminate
         - COMPONENT_TYPE=lib ./ci/test.sh
       if: branch = master OR branch =~ ^multi- OR branch =~ ^lib-library1-
       env: COMPONENT_NAME=library1 TEST_SUITE=php_functional_1
@@ -39,7 +53,7 @@ jobs:
     - &srv-test-stage
       stage: test services
       script:
-        - COMPONENT_TYPE=srv ./ci/modified.sh || travis_terminate
+        - COMPONENT_TYPE=srv ./ci/check_modified.sh || travis_terminate
         - BUILD_ENV=test COMPONENT_TYPE=srv ./ci/test.sh
       if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service1-
       env: COMPONENT_NAME=service1 TEST_SUITE=php_functional_1
@@ -64,11 +78,12 @@ jobs:
       if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service4-
       env: COMPONENT_NAME=service4 BB=1
 
+
     # Dev image to be used for nobob and QA
     - &dev-deploy-stage
       stage: deploy
       script:
-        - COMPONENT_TYPE=srv ./ci/modified.sh || travis_terminate
+        - COMPONENT_TYPE=srv ./ci/check_modified.sh || travis_terminate
         - BUILD_ENV=dev ./ci/deploy.sh
       if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service1-
       env: COMPONENT_NAME=service1
@@ -85,11 +100,12 @@ jobs:
       if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service4-
       env: COMPONENT_NAME=service4
 
+
     # Prod image
     - &prod-deploy-stage
       stage: deploy
       script:
-        - COMPONENT_TYPE=srv ./ci/modified.sh || travis_terminate
+        - COMPONENT_TYPE=srv ./ci/check_modified.sh || travis_terminate
         - BUILD_ENV=dev ./ci/deploy.sh
       if: branch = master
       env: COMPONENT_NAME=service1
