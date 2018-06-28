@@ -37,7 +37,7 @@ elif [[ $THIS_MODIFIED == true ]] ; then
         exit 0
     else
         echo -e "Component modified in branch $TRAVIS_BRANCH is not registered in .travis.yml, FAIL BUILD"
-        exit 0
+        exit 1
     fi
 else
     echo -e "No files were modified, FAIL BUILD"
