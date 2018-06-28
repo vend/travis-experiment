@@ -37,6 +37,18 @@ jobs:
         - ./ci/check_modified_single.sh
 
 
+    # Test libraries
+    - &lib-test-stage
+      stage: test libraries
+      script:
+        - COMPONENT_TYPE=lib ./ci/check_modified.sh || travis_terminate
+        - COMPONENT_TYPE=lib ./ci/test.sh
+      if: branch = master OR branch =~ ^multi- OR branch =~ concat(^lib-,library2,-)
+      env: COMPONENT_NAME=library1 TEST_SUITE=functional
+
+    - <<: *lib-test-stage
+      env: COMPONENT_NAME=library2 TEST_SUITE=unit
+
 
     # Test services
     - &srv-test-stage
@@ -61,19 +73,6 @@ jobs:
 
     - <<: *srv-test-stage
       env: COMPONENT_NAME=service4 BB=1
-
-
-    # Test libraries
-    - &lib-test-stage
-      stage: test libraries
-      script:
-        - COMPONENT_TYPE=lib ./ci/check_modified.sh || travis_terminate
-        - COMPONENT_TYPE=lib ./ci/test.sh
-      if: branch = master OR branch =~ ^multi- OR branch =~ concat(^lib-,env(COMPONENT_NAME),-)
-      env: COMPONENT_NAME=library1 TEST_SUITE=functional
-
-    - <<: *lib-test-stage
-      env: COMPONENT_NAME=library2 TEST_SUITE=unit
 
 
     # Dev image to be used for nobob and QA
