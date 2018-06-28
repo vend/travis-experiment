@@ -1,14 +1,9 @@
-language: go
-
 conditions: v1
 
+language: go
 go: 1.10.x
 
 install: skip
-
-# todo:
-# - try real go service with 3rd party and local deps
-# - add skeleton lib & skeleton service for new libs and services to be baste on for consistency
 
 # Branch prefixes:
 # - lib-* Work related to a specific single library eg lib-unicorn-feature-a
