@@ -1,14 +1,9 @@
-language: go
-
 conditions: v1
 
+language: go
 go: 1.10.x
 
 install: skip
-
-# todo:
-# - try real go service with 3rd party and local deps
-# - add skeleton lib & skeleton service for new libs and services to be baste on for consistency
 
 # Branch prefixes:
 # - lib-* Work related to a specific single library eg lib-unicorn-feature-a
@@ -17,6 +12,8 @@ install: skip
 
 # Limitations:
 # - Currently, the way check_modified_single.sh works relies on component names no having dashes or there could be mismatches
+# - Also check_modified_single.sh expects that components of different types may not share the same name
+# - All tests are expected to be dockerised to avoid any dependencies installed in travis file
 
 jobs:
   include:
@@ -25,7 +22,7 @@ jobs:
       env: CHECK="Branch name"
       if: NOT branch = master AND NOT branch =~ ^multi- AND NOT branch =~ ^lib- AND NOT branch =~ ^srv-
       script:
-        - echo -e "\n\nILLEGAL BRANCH NAME $TRAVIS_BRANCH\nMust begin with srv- or lib- or multi-" && exit 1
+        - echo -e "\n\nILLEGAL BRANCH NAME $TRAVIS_BRANCH\nMust begin with either srv- or lib- or multi-" && exit 1
 
     - stage: check
       env: CHECK="Modified files in multiple components"
@@ -47,10 +44,10 @@ jobs:
         - COMPONENT_TYPE=lib ./ci/check_modified.sh || travis_terminate
         - COMPONENT_TYPE=lib ./ci/test.sh
       if: branch = master OR branch =~ ^multi- OR branch =~ concat(^lib-,env(COMPONENT_NAME),-)
-      env: COMPONENT_NAME=library1 TEST_SUITE=php_functional_1
+      env: COMPONENT_NAME=library1 TEST_SUITE=functional
 
     - <<: *lib-test-stage
-      env: COMPONENT_NAME=library2 TEST_SUITE=php_functional_2
+      env: COMPONENT_NAME=library2 TEST_SUITE=unit
 
 
     # Test services
@@ -60,10 +57,10 @@ jobs:
         - COMPONENT_TYPE=srv ./ci/check_modified.sh || travis_terminate
         - BUILD_ENV=test COMPONENT_TYPE=srv ./ci/test.sh
       if: branch = master OR branch =~ ^multi- OR branch =~ concat(^srv-,env(COMPONENT_NAME),-)
-      env: COMPONENT_NAME=service1 TEST_SUITE=php_functional_1
+      env: COMPONENT_NAME=service1 TEST_SUITE=unit
 
     - <<: *srv-test-stage
-      env: COMPONENT_NAME=service1 TEST_SUITE=php_functional_2
+      env: COMPONENT_NAME=service1 TEST_SUITE=functional
 
     - <<: *srv-test-stage
       env: COMPONENT_NAME=service2
@@ -102,7 +99,7 @@ jobs:
       stage: deploy
       script:
         - COMPONENT_TYPE=srv ./ci/check_modified.sh || travis_terminate
-        - BUILD_ENV=dev ./ci/deploy.sh
+        - BUILD_ENV=prod ./ci/deploy.sh
       if: branch = master
       env: COMPONENT_NAME=service1
 
