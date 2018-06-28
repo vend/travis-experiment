@@ -43,7 +43,8 @@ jobs:
       script:
         - COMPONENT_TYPE=lib ./ci/check_modified.sh || travis_terminate
         - COMPONENT_TYPE=lib ./ci/test.sh
-      if: branch = master OR branch =~ ^multi- OR branch = env(BR)
+      # if: branch = master OR branch =~ ^multi- OR branch = env(BR)
+      if: branch = env(BR)
       #concat(^lib-,env(COMPONENT_NAME),-)
       env: COMPONENT_NAME=library1 TEST_SUITE=functional BR=lib-library1-x
 
