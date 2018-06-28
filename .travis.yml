@@ -40,14 +40,15 @@ jobs:
     # Test libraries
     - &lib-test-stage
       stage: test libraries
-      env: COMPONENT_NAME=library1 TEST_SUITE=functional
       script:
         - COMPONENT_TYPE=lib ./ci/check_modified.sh || travis_terminate
         - COMPONENT_TYPE=lib ./ci/test.sh
-      if: branch = master OR branch =~ ^multi- OR branch =~ env(COMPONENT_NAME)
+      if: branch = master OR branch =~ ^multi- OR branch = BR
+      #concat(^lib-,env(COMPONENT_NAME),-)
+      env: COMPONENT_NAME=library1 TEST_SUITE=functional BR=lib-library1-x
 
     - <<: *lib-test-stage
-      env: COMPONENT_NAME=library2 TEST_SUITE=unit
+      env: COMPONENT_NAME=library2 TEST_SUITE=unit BR=lib-library2-test-conditions
 
 
     # Test services
