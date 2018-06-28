@@ -12,6 +12,7 @@ install: skip
 
 # Limitations:
 # - Currently, the way check_modified_single.sh works relies on component names no having dashes or there could be mismatches
+# - Also check_modified_single.sh expects that components of different types may not share the same name
 # - All tests are expected to be dockerised to avoid any dependencies installed in travis file
 
 jobs:

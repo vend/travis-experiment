@@ -10,10 +10,9 @@
 set -e
 
 MODIFIED_DIRS=$(./ci/modified_dirs.sh)
-
 echo -e "Directories with changes:\n$MODIFIED_DIRS\n"
 
-COMPONENT_DIR=""
+COMPONENT_NAME=""
 THIS_MODIFIED=false
 OTHERS_MODIFIED=false
 
@@ -21,7 +20,8 @@ for MODIFIED_DIR in $MODIFIED_DIRS
 do
     if [[ ${TRAVIS_BRANCH/-//} =~ ^${MODIFIED_DIR}- ]] ; then
         THIS_MODIFIED=true
-        COMPONENT_DIR="$MODIFIED_DIR"
+        PATH_PARTS=(${MODIFIED_DIR/\// })
+        COMPONENT_NAME=${PATH_PARTS[1]}
     else
         OTHERS_MODIFIED=true
     fi
@@ -32,7 +32,7 @@ if [[ $OTHERS_MODIFIED == true ]] ; then
     exit 1
 elif [[ $THIS_MODIFIED == true ]] ; then
     # Check that the component is registered in travis file
-    if grep -q "branch =~ ^${COMPONENT_DIR/\//-}-" .travis.yml ; then
+    if grep -q "COMPONENT_NAME=${COMPONENT_NAME}" .travis.yml ; then
         echo -e "Single component $TRAVIS_BRANCH was modified, PROCEED"
         exit 0
     else
