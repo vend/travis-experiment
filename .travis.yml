@@ -1,4 +1,4 @@
-conditions: v1
+# conditions: v1
 
 language: go
 go: 1.10.x
@@ -47,11 +47,11 @@ jobs:
       if: branch = env(BR)
       #concat(^lib-,env(COMPONENT_NAME),-)
       # env: COMPONENT_NAME=library1 TEST_SUITE=functional BR=lib-library1-x
-      env: BR="lib-library2-test-conditions" A=1
+      env: BR=lib-library2-test-conditions A=1
 
     - <<: *lib-test-stage
       # env: COMPONENT_NAME=library2 TEST_SUITE=unit BR=lib-library2-test-conditions
-      env: BR="lib-library2-test-conditions" B=1
+      env: BR=lib-library2-test-conditions B=1
 
 
     # # Test services
