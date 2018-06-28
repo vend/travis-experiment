@@ -6,6 +6,7 @@
 # Note current limitation of this script is that component names should not have dashes in their names
 # Otherwise matching directory <=> service which we get from branch name can break if there are
 # components with similar names eg "reporting" and "reporting-web"
+# Another limitation is that components of different types may not share the same name
 
 set -e
 
