@@ -1,5 +1,7 @@
 language: go
 
+conditions: v1
+
 go: 1.10.x
 
 install: skip
@@ -44,11 +46,10 @@ jobs:
       script:
         - COMPONENT_TYPE=lib ./ci/check_modified.sh || travis_terminate
         - COMPONENT_TYPE=lib ./ci/test.sh
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^lib-library1-
+      if: branch = master OR branch =~ ^multi- OR branch =~ concat(^lib-,env(COMPONENT_NAME),-)
       env: COMPONENT_NAME=library1 TEST_SUITE=php_functional_1
 
     - <<: *lib-test-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^lib-library2-
       env: COMPONENT_NAME=library2 TEST_SUITE=php_functional_2
 
 
@@ -58,27 +59,22 @@ jobs:
       script:
         - COMPONENT_TYPE=srv ./ci/check_modified.sh || travis_terminate
         - BUILD_ENV=test COMPONENT_TYPE=srv ./ci/test.sh
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service1-
+      if: branch = master OR branch =~ ^multi- OR branch =~ concat(^srv-,env(COMPONENT_NAME),-)
       env: COMPONENT_NAME=service1 TEST_SUITE=php_functional_1
 
     - <<: *srv-test-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service1-
       env: COMPONENT_NAME=service1 TEST_SUITE=php_functional_2
 
     - <<: *srv-test-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service2-
       env: COMPONENT_NAME=service2
 
     - <<: *srv-test-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service3-
       env: COMPONENT_NAME=service3 SOME_OTHER_VAR=whatever
 
     - <<: *srv-test-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service4-
       env: COMPONENT_NAME=service4 AA=1
 
     - <<: *srv-test-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service4-
       env: COMPONENT_NAME=service4 BB=1
 
 
@@ -88,19 +84,16 @@ jobs:
       script:
         - COMPONENT_TYPE=srv ./ci/check_modified.sh || travis_terminate
         - BUILD_ENV=dev ./ci/deploy.sh
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service1-
+      if: branch = master OR branch =~ ^multi- OR branch =~ concat(^srv-,env(COMPONENT_NAME),-)
       env: COMPONENT_NAME=service1
 
     - <<: *dev-deploy-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service2-
       env: COMPONENT_NAME=service2
 
     - <<: *dev-deploy-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service3-
       env: COMPONENT_NAME=service3
 
     - <<: *dev-deploy-stage
-      if: branch = master OR branch =~ ^multi- OR branch =~ ^srv-service4-
       env: COMPONENT_NAME=service4
 
 
