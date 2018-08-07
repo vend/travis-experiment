@@ -51,7 +51,7 @@ jobs:
 
     - <<: *lib-test-stage
       # env: COMPONENT_NAME=library2 TEST_SUITE=unit BR=lib-library2-test-conditions
-      env: BR=lib-library2-test-conditions B=1
+      env: BR=lib-library2-test-conditions B=2
 
 
     # # Test services
